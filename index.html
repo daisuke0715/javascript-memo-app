@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>ToDoリスト</h1>
+    <section class="status-check">
+        <div class="radio-buttons">
+            <input type="radio" name="status" id="status1">
+            <label for="status1">すべて</label>
+            <input type="radio" name="status" id="status2">
+            <label for="status2">作業中</label>
+            <input type="radio" name="status" id="status3">
+            <label for="status3">完了</label>
+        </div>
+    </section>
+
+
+    <section class="tasks-check">
+        <div class="all-tasks">
+            <table id="task-table">
+                <tbody id="task-table-body">
+                    <tr>
+                        <th>ID</th>
+                        <th>コメント</th>
+                        <th>状態</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="task-create">
+        <div class="create-task">
+            <h2>新規タスクの追加</h2>
+            <input type="text" id="task-input-form">
+            <input type="button" value="追加" id="create-button">
+        </div>
+    </section>
+    
+
+
+
+    <script src="main.js"></script>
+</body>
+</html>
