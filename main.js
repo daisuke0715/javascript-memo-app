@@ -5,43 +5,41 @@ const taskTbBody = document.getElementById('task-table-body');
 const createButton = document.getElementById('create-button');
 
 
+// 追加ボタンクリック時の挙動
 createButton.addEventListener('click', () => { 
-    let elements = document.getElementsByTagName('tr');
-    elements = [].slice.call(elements);
-    console.log(elements);
-    let index = elements.length - 1;
+    let newTask = document.getElementsByTagName('tr');
+    newTask = [].slice.call(newTask);
+    let index = newTask.length - 1;
     createTask(index);
-
 });
 
 
-
+// メモ新規作成のメソッド
 const createTask = (index) =>  {
     const tbRow = document.createElement('tr');
-
     const idCell = document.createElement('td');
     const idCellText = document.createTextNode(index);
-    idCell.appendChild(idCellText);
-
     const taskTextCell = document.createElement('td');
     const taskText = document.createTextNode(escapeHtml(document.getElementById('task-input-form').value));
-    taskTextCell.appendChild(taskText);
-
     const statusCell = document.createElement('td');
     const statusButton = document.createElement('input');
-    statusButton.classList.add('status-button');
+    const deleteCell = document.createElement('td');
+    const deleteButton = document.createElement('input');
+
+    tbRow.classList.add(`tr${index}`);
+
+    statusButton.classList.add(`status-button${index}`);
     statusButton.type = 'button';
     statusButton.value = '作業中';
-    statusCell.appendChild(statusButton);
-
-
-    const deleteCell = document.createElement('td')
-    const deleteButton = document.createElement('input');
-    deleteButton.classList.add('delete-button');
+    
+    deleteButton.classList.add(`delete-button${index}`);
     deleteButton.type = 'button';
     deleteButton.value = '削除';
-    deleteCell.appendChild(deleteButton);
 
+    idCell.appendChild(idCellText);
+    taskTextCell.appendChild(taskText);
+    statusCell.appendChild(statusButton);
+    deleteCell.appendChild(deleteButton);
 
     tbRow.appendChild(idCell);
     tbRow.appendChild(taskTextCell);
@@ -50,6 +48,9 @@ const createTask = (index) =>  {
 
     taskTbBody.appendChild(tbRow);
 };
+
+
+
 
 
 
@@ -62,4 +63,6 @@ const escapeHtml = (str) => {
     str = str.replace(/"/g, '&quot;');
     str = str.replace(/'/g, '&#39;');
     return str;
-}
+};
+
+
