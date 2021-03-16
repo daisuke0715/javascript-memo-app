@@ -4,54 +4,22 @@ const taskTb = document.getElementById('task-table');
 const taskTbBody = document.getElementById('task-table-body');
 const createButton = document.getElementById('create-button');
 
+// 入力された情報が格納されている配列
+const todos = [];
 
 // 追加ボタンクリック時の挙動
-createButton.addEventListener('click', () => { 
-    let newTask = document.getElementsByTagName('tr');
-    newTask = [].slice.call(newTask);
-    let index = newTask.length - 1;
-    createTask(index);
-});
+createButton.addEventListener('click', () => {
 
-
-// メモ新規作成のメソッド
-const createTask = (index) =>  {
-    const tbRow = document.createElement('tr');
-    const idCell = document.createElement('td');
-    const idCellText = document.createTextNode(index);
-    const taskTextCell = document.createElement('td');
-    const taskText = document.createTextNode(escapeHtml(document.getElementById('task-input-form').value));
-    const statusCell = document.createElement('td');
-    const statusButton = document.createElement('input');
-    const deleteCell = document.createElement('td');
-    const deleteButton = document.createElement('input');
-
-    tbRow.classList.add(`tr${index}`);
-
-    statusButton.classList.add(`status-button${index}`);
-    statusButton.type = 'button';
-    statusButton.value = '作業中';
+    const todo = {
+        task: '入力された情報',
+        status: '作業中'
+    };
     
-    deleteButton.classList.add(`delete-button${index}`);
-    deleteButton.type = 'button';
-    deleteButton.value = '削除';
+    todo.task = document.getElementById('task-input-form').value;
+    todos.push(todo);
 
-    idCell.appendChild(idCellText);
-    taskTextCell.appendChild(taskText);
-    statusCell.appendChild(statusButton);
-    deleteCell.appendChild(deleteButton);
-
-    tbRow.appendChild(idCell);
-    tbRow.appendChild(taskTextCell);
-    tbRow.appendChild(statusCell);
-    tbRow.appendChild(deleteCell);
-
-    taskTbBody.appendChild(tbRow);
-};
-
-
-
-
+    displayTodos(todos);
+});
 
 
 // XSS対策(エスケープ処理)
@@ -64,5 +32,49 @@ const escapeHtml = (str) => {
     str = str.replace(/'/g, '&#39;');
     return str;
 };
+
+
+
+// todos配列の中身を表示させる関数
+const displayTodos = (todosArray) => {
+    console.log(todosArray);
+    for (let i = 0; i <= todosArray.length; i++) {
+        // 列の生成
+        const tbRow = document.createElement('tr');
+
+        // セルの生成
+        const idCell = document.createElement('td');
+        const taskCell = document.createElement('td');
+        const statusCell = document.createElement('td');
+        const deleteCell = document.createElement('td');
+
+        // セル内の要素の生成
+        const idText = document.createTextNode(i);
+        const taskText = document.createTextNode(todosArray[i].task); 
+        const statusButton = document.createElement('input');
+        const deleteButton = document.createElement('input');
+
+        // ボタンの情報
+        statusButton.type = 'button';
+        statusButton.value = todosArray[i].status;
+        deleteButton.type = 'button';
+        deleteButton.value = '削除';
+
+        // 生成したセルの子要素に要素を追加
+        idCell.appendChild(idText);
+        taskCell.appendChild(taskText);
+        statusCell.appendChild(statusButton);
+        deleteCell.appendChild(deleteButton);
+
+        // セルを生成した列に挿入
+        tbRow.appendChild(idCell);
+        tbRow.appendChild(taskCell);
+        tbRow.appendChild(statusCell);
+        tbRow.appendChild(deleteCell);
+
+        // 完成した列を画面に追加
+        taskTbBody.appendChild(tbRow);
+    }
+}
 
 
