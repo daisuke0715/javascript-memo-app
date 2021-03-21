@@ -49,12 +49,6 @@ const displayTodos = (todosArray) => {
         deleteButton.type = 'button';
         deleteButton.value = '削除';
 
-
-
-
-
-
-
         statusButton.addEventListener('click', () => {
             statusChange(i);
         });
