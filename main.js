@@ -13,10 +13,6 @@ createButton.addEventListener('click', () => {
         status: '作業中'
     };
 
-    while (taskTbBody.children[1] !== undefined) {
-        taskTbBody.removeChild(taskTbBody.children[1]);
-    }
-
     todo.task = document.getElementById('task-input-form').value;
     todos.push(todo);
 
@@ -28,7 +24,11 @@ createButton.addEventListener('click', () => {
 
 
 const displayTodos = (todosArray) => {
-    console.log(todosArray);
+
+    while (taskTbBody.children[1] !== undefined) {
+        taskTbBody.removeChild(taskTbBody.children[1]);
+    }
+
     for (let i = 0; i < todosArray.length; i++) {
 
         const tbRow = document.createElement('tr');
@@ -49,6 +49,15 @@ const displayTodos = (todosArray) => {
         deleteButton.type = 'button';
         deleteButton.value = '削除';
 
+        statusButton.addEventListener('click', () => {
+            statusChange(i);
+        });
+
+
+        deleteButton.addEventListener('click', () => {
+            deleteTask(i);
+        });
+
         tbRow.appendChild(idCell).appendChild(idText);
         tbRow.appendChild(taskCell).appendChild(taskText);
         tbRow.appendChild(statusCell).appendChild(statusButton);
@@ -56,4 +65,19 @@ const displayTodos = (todosArray) => {
 
         taskTbBody.appendChild(tbRow);
     }
+}
+
+
+const statusChange = index => {
+    if (todos[index].status === '作業中' ) {
+        todos[index].status = '完了';
+    } else {
+        todos[index].status = '作業中';
+    } 
+    displayTodos(todos);
+}
+
+const deleteTask = index => {
+    todos.splice(index, 1);
+    displayTodos(todos);
 }
