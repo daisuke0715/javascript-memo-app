@@ -3,13 +3,14 @@
 const taskTb = document.getElementById('task-table');
 const taskTbBody = document.getElementById('task-table-body');
 const createButton = document.getElementById('create-button');
-const radioStatuses = document.getElementsByName('radio-status');
+const radioButtons = document.getElementsByName('radio-status');
 
 const todos = [];
 
 window.onload = () => {
-    radioStatuses.forEach((e) => {
+    radioButtons.forEach((e) => {
         e.addEventListener('click', () => {
+            displayTodos(todos);
             checkStatus();
         });
     });
@@ -22,10 +23,11 @@ createButton.addEventListener('click', () => {
         status: '作業中'
     };
 
+
     todo.task = document.getElementById('task-input-form').value;
     todos.push(todo);
 
-    checkStatus();
+    displayTodos(todos);
 
     document.getElementById('task-input-form').value = '';
 });
@@ -38,8 +40,7 @@ const displayTodos = (todosArray) => {
         taskTbBody.removeChild(taskTbBody.children[1]);
     }
 
-    for (let i = 0; i < todosArray.length; i++) {
-
+    todosArray.forEach((element, index) => {
         const tbRow = document.createElement('tr');
         tbRow.classList.add('tr');
 
@@ -48,23 +49,30 @@ const displayTodos = (todosArray) => {
         const statusCell = document.createElement('td');
         const deleteCell = document.createElement('td');
         
-        const idText = document.createTextNode(i);
-        const taskText = document.createTextNode(todosArray[i].task); 
+        const idText = document.createTextNode(index);
+        const taskText = document.createTextNode(element.task); 
         const statusButton = document.createElement('input');
         const deleteButton = document.createElement('input');
 
         statusButton.type = 'button';
-        statusButton.value = todosArray[i].status;
+        statusButton.value = element.status;
         deleteButton.type = 'button';
         deleteButton.value = '削除';
 
         statusButton.addEventListener('click', () => {
-            statusChange(i);
+            if (statusButton.value === '作業中') {
+                todos[index]['status'] = '完了';
+            } else {
+                todos[index]['status'] = '作業中';
+            }
+            checkStatus();
+            
         });
 
 
         deleteButton.addEventListener('click', () => {
-            deleteTask(i);
+            todos.splice(index, 1);
+            displayTodos(todos); 
         });
 
         tbRow.appendChild(idCell).appendChild(idText);
@@ -73,55 +81,33 @@ const displayTodos = (todosArray) => {
         tbRow.appendChild(deleteCell).appendChild(deleteButton);
 
         taskTbBody.appendChild(tbRow);
-    }
+    });    
+
 }
-
-const statusChange = index => {
-    if (todos[index].status === '作業中' ) {
-        todos[index].status = '完了';
-    } else {
-        todos[index].status = '作業中';
-    }
-    checkStatus();
-}
-
-
-const deleteTask = index => {
-    todos.splice(index, 1);
-    checkStatus();
-}
-
 
 const checkStatus = () => {
-    let nowStatus = '';
+    const checkedRadio = document.querySelector('input:checked[name=radio-status]')
+    if (checkedRadio === null) {
+        displayTodos(todos);
+        return
+    } 
+    
+    const checkedRadioId = checkedRadio.id
+    if ( checkedRadioId === 'all') {
+        displayTodos(todos);
+    } else if( checkedRadioId === 'doing') {
+        hiddenElement(todos, '完了');
+    } else if( checkedRadioId === 'done') {
+        hiddenElement(todos, '作業中');
+    }
+}
 
-    // 現在のステータス情報を取得
-    for (let i = 0; i < radioStatuses.length; i++){
-        if (radioStatuses[i].checked) {
-            nowStatus = radioStatuses[i].id;
-            break;
+
+
+const hiddenElement = (todosArray, nowstatus) => {
+    for(let i = 0; i < todosArray.length; i++){
+        if (todosArray[i]['status'] === nowstatus){
+            taskTbBody.children[i+1].style.display = 'none';
         }
     }
-
-    let newTodos = [];
-    // ステータスによって表示させるタスク内容を変更する
-    if (nowStatus === 'doing') {
-        todos.filter((value) => {
-            if (value.status === '作業中') {
-                newTodos.push(value);
-                displayTodos(newTodos);
-            }
-        });
-    }else if (nowStatus === 'done') {
-        todos.filter((value) => {
-            if (value.status === '完了') {
-               newTodos.push(value);
-               displayTodos(newTodos);
-            }
-        });
-    }else {
-        displayTodos(todos);
-    }
-
-    
 }
