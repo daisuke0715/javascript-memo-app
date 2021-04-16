@@ -8,9 +8,9 @@ const radioButtons = document.getElementsByName('radio-status');
 const todos = [];
 
 window.onload = () => {
+    radioButtons[0].checked = true;
     radioButtons.forEach((e) => {
         e.addEventListener('click', () => {
-            displayTodos(todos);
             checkStatus();
         });
     });
@@ -27,7 +27,7 @@ createButton.addEventListener('click', () => {
     todo.task = document.getElementById('task-input-form').value;
     todos.push(todo);
 
-    displayTodos(todos);
+    checkStatus();
 
     document.getElementById('task-input-form').value = '';
 });
@@ -72,7 +72,7 @@ const displayTodos = (todosArray) => {
 
         deleteButton.addEventListener('click', () => {
             todos.splice(index, 1);
-            displayTodos(todos); 
+            checkStatus();
         });
 
         tbRow.appendChild(idCell).appendChild(idText);
@@ -86,13 +86,10 @@ const displayTodos = (todosArray) => {
 }
 
 const checkStatus = () => {
-    const checkedRadio = document.querySelector('input:checked[name=radio-status]')
-    if (checkedRadio === null) {
-        displayTodos(todos);
-        return
-    } 
+    displayTodos(todos);
+    const checkedRadio = document.querySelector('input:checked[name=radio-status]');
     
-    const checkedRadioId = checkedRadio.id
+    const checkedRadioId = checkedRadio.id;
     if ( checkedRadioId === 'all') {
         displayTodos(todos);
     } else if( checkedRadioId === 'doing') {
